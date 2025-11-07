@@ -23,7 +23,7 @@ public class GameUI extends JFrame implements GameObserver {
         this.gameFacade = gameFacade;
         gameFacade.getObserverBus().addObserver(this);
 
-        setTitle("RPG Game - Паттерны проектирования");
+        setTitle("RPG Game ");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());

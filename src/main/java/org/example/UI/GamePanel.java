@@ -15,10 +15,8 @@ public class GamePanel extends JPanel {
     private Timer attackTimer;
     private Timer enemyAITimer;
 
-    // Частицы для эффектов
     private java.util.List<Particle> particles = new java.util.ArrayList<>();
 
-    // Для плавного движения
     private double heroDisplayX = 0;
     private double heroDisplayY = 0;
     private double enemyDisplayX = 0;
@@ -29,7 +27,6 @@ public class GamePanel extends JPanel {
         setBackground(new Color(20, 25, 35));
         setFocusable(true);
 
-        // Таймер для анимации частиц и плавного движения
         Timer particleTimer = new Timer(30, e -> {
             updateParticles();
             updateSmoothMovement();
@@ -37,7 +34,6 @@ public class GamePanel extends JPanel {
         });
         particleTimer.start();
 
-        // Таймер для автоматической атаки противника
         enemyAITimer = new Timer(2000, e -> {
             if (gameFacade.isGameStarted() &&
                     gameFacade.getEnemy() != null &&
@@ -116,7 +112,6 @@ public class GamePanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        // Градиентный фон
         GradientPaint gradient = new GradientPaint(
                 0, 0, new Color(20, 25, 35),
                 0, getHeight(), new Color(35, 45, 60)
@@ -124,7 +119,6 @@ public class GamePanel extends JPanel {
         g2d.setPaint(gradient);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        // Декоративные элементы фона
         drawBackgroundPattern(g2d);
 
         if (!gameFacade.isGameStarted()) {
@@ -135,7 +129,6 @@ public class GamePanel extends JPanel {
         GameCharacter hero = gameFacade.getHero();
         GameCharacter enemy = gameFacade.getEnemy();
 
-        // Инициализация позиций для плавного движения
         if (hero != null && heroDisplayX == 0 && heroDisplayY == 0) {
             heroDisplayX = hero.getX();
             heroDisplayY = hero.getY();
@@ -145,7 +138,6 @@ public class GamePanel extends JPanel {
             enemyDisplayY = enemy.getY();
         }
 
-        // Рисуем арену
         drawArena(g2d);
 
         if (hero != null) {
@@ -158,10 +150,8 @@ public class GamePanel extends JPanel {
             drawHealthBar(g2d, enemy, (int)enemyDisplayX, (int)enemyDisplayY - 50);
         }
 
-        // Рисуем частицы
         drawParticles(g2d);
 
-        // Эффекты атаки
         if (heroAttacking && hero != null && enemy != null) {
             drawAttackEffect(g2d, (int)heroDisplayX + 30, (int)heroDisplayY,
                     (int)enemyDisplayX, (int)enemyDisplayY);
@@ -177,7 +167,6 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Статистика в улучшенных панелях
         drawStats(g2d);
     }
 
@@ -196,33 +185,27 @@ public class GamePanel extends JPanel {
         int centerY = getHeight() / 2;
         int radius = 250;
 
-        // Внешний круг арены
         g2d.setColor(new Color(50, 60, 75, 100));
         g2d.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
 
-        // Внутренний круг
         g2d.setColor(new Color(40, 50, 65, 150));
         g2d.fillOval(centerX - radius + 20, centerY - radius + 20,
                 (radius - 20) * 2, (radius - 20) * 2);
 
-        // Граница
         g2d.setStroke(new BasicStroke(3));
         g2d.setColor(new Color(100, 150, 200, 200));
         g2d.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
     }
 
     private void drawWelcomeScreen(Graphics2D g2d) {
-        // Анимированный заголовок
         g2d.setColor(new Color(100, 200, 255));
         g2d.setFont(new Font("Arial", Font.BOLD, 48));
         String title = "RPG GAME";
         int titleWidth = g2d.getFontMetrics().stringWidth(title);
 
-        // Тень для заголовка
         g2d.setColor(new Color(0, 0, 0, 100));
         g2d.drawString(title, (getWidth() - titleWidth) / 2 + 3, getHeight() / 2 - 47);
 
-        // Основной текст с градиентом
         GradientPaint titleGradient = new GradientPaint(
                 0, getHeight() / 2 - 60, new Color(100, 200, 255),
                 0, getHeight() / 2 - 30, new Color(50, 150, 255)
@@ -230,14 +213,12 @@ public class GamePanel extends JPanel {
         g2d.setPaint(titleGradient);
         g2d.drawString(title, (getWidth() - titleWidth) / 2, getHeight() / 2 - 50);
 
-        // Подзаголовок
         g2d.setColor(new Color(200, 220, 255));
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         String subtitle = "Паттерны проектирования";
         int subtitleWidth = g2d.getFontMetrics().stringWidth(subtitle);
         g2d.drawString(subtitle, (getWidth() - subtitleWidth) / 2, getHeight() / 2 + 10);
 
-        // Декоративная рамка
         g2d.setStroke(new BasicStroke(2));
         g2d.setColor(new Color(100, 150, 200, 100));
         g2d.drawRoundRect(getWidth() / 2 - 250, getHeight() / 2 - 100,
@@ -246,7 +227,6 @@ public class GamePanel extends JPanel {
 
     private void drawCharacter(Graphics2D g2d, int x, int y, GameCharacter character, boolean isHero) {
         if (!character.isAlive()) {
-            // Эффект смерти
             g2d.setColor(new Color(100, 100, 100, 150));
             g2d.fillOval(x - 20, y + 15, 40, 15);
 
@@ -256,11 +236,9 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        // Тень персонажа
         g2d.setColor(new Color(0, 0, 0, 80));
         g2d.fillOval(x - 20, y + 35, 40, 10);
 
-        // Цвет персонажа с градиентом
         GradientPaint bodyGradient;
         if (isHero) {
             bodyGradient = new GradientPaint(
@@ -274,17 +252,14 @@ public class GamePanel extends JPanel {
             );
         }
 
-        // Тело
         g2d.setPaint(bodyGradient);
         RoundRectangle2D body = new RoundRectangle2D.Double(x - 15, y, 30, 40, 10, 10);
         g2d.fill(body);
 
-        // Граница тела
         g2d.setColor(new Color(0, 0, 0, 100));
         g2d.setStroke(new BasicStroke(2));
         g2d.draw(body);
 
-        // Голова с градиентом
         GradientPaint headGradient = new GradientPaint(
                 x, y - 30, new Color(255, 230, 190),
                 x, y - 5, new Color(240, 210, 170)
@@ -296,17 +271,14 @@ public class GamePanel extends JPanel {
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawOval(x - 15, y - 30, 30, 30);
 
-        // Глаза
         g2d.setColor(Color.BLACK);
         g2d.fillOval(x - 8, y - 20, 5, 5);
         g2d.fillOval(x + 3, y - 20, 5, 5);
 
-        // Блики в глазах
         g2d.setColor(Color.WHITE);
         g2d.fillOval(x - 6, y - 19, 2, 2);
         g2d.fillOval(x + 5, y - 19, 2, 2);
 
-        // Оружие с эффектом свечения
         if (isHero) {
             g2d.setColor(new Color(255, 215, 0, 200));
             g2d.setStroke(new BasicStroke(4));
@@ -325,7 +297,6 @@ public class GamePanel extends JPanel {
             g2d.drawLine(x - 35, y + 10, x - 18, y + 10);
         }
 
-        // Имя с тенью
         g2d.setFont(new Font("Arial", Font.BOLD, 14));
         String name = character.getName();
         int nameWidth = g2d.getFontMetrics().stringWidth(name);
@@ -342,7 +313,6 @@ public class GamePanel extends JPanel {
         int barHeight = 12;
         int padding = 2;
 
-        // Внешняя рамка с градиентом
         GradientPaint frameGradient = new GradientPaint(
                 x - barWidth / 2, y, new Color(60, 70, 90),
                 x + barWidth / 2, y, new Color(80, 90, 110)
@@ -351,11 +321,9 @@ public class GamePanel extends JPanel {
         g2d.fillRoundRect(x - barWidth / 2 - padding, y - padding,
                 barWidth + padding * 2, barHeight + padding * 2, 8, 8);
 
-        // Фон
         g2d.setColor(new Color(30, 30, 40));
         g2d.fillRoundRect(x - barWidth / 2, y, barWidth, barHeight, 6, 6);
 
-        // Здоровье с градиентом
         float healthPercent = (float) character.getHealth() / character.getMaxHealth();
         int healthWidth = (int) (barWidth * healthPercent);
 
@@ -380,12 +348,10 @@ public class GamePanel extends JPanel {
             g2d.fillRoundRect(x - barWidth / 2, y, healthWidth, barHeight, 6, 6);
         }
 
-        // Граница
         g2d.setColor(new Color(200, 220, 255));
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawRoundRect(x - barWidth / 2, y, barWidth, barHeight, 6, 6);
 
-        // Текст HP
         g2d.setFont(new Font("Arial", Font.BOLD, 11));
         String healthText = character.getHealth() + "/" + character.getMaxHealth();
         int textWidth = g2d.getFontMetrics().stringWidth(healthText);
@@ -402,21 +368,17 @@ public class GamePanel extends JPanel {
         int currentX = (int) (fromX + (toX - fromX) * progress);
         int currentY = (int) (fromY + (toY - fromY) * progress);
 
-        // Основная линия атаки
         g2d.setColor(new Color(255, 255, 100, 200));
         g2d.setStroke(new BasicStroke(5));
         g2d.drawLine(fromX, fromY, currentX, currentY);
 
-        // Внутренняя яркая линия
         g2d.setColor(new Color(255, 255, 200, 250));
         g2d.setStroke(new BasicStroke(2));
         g2d.drawLine(fromX, fromY, currentX, currentY);
 
-        // Эффект попадания
         if (progress > 0.8) {
             int impactSize = (int) (50 * (1 - (progress - 0.8) / 0.2));
 
-            // Внешнее свечение
             for (int i = 0; i < 3; i++) {
                 int alpha = 100 - i * 30;
                 g2d.setColor(new Color(255, 150, 0, alpha));
@@ -424,7 +386,6 @@ public class GamePanel extends JPanel {
                         (impactSize + i * 5) * 2, (impactSize + i * 5) * 2);
             }
 
-            // Центральная вспышка
             g2d.setColor(new Color(255, 255, 255, 200));
             g2d.fillOval(toX - impactSize / 2, toY - impactSize / 2,
                     impactSize, impactSize);
@@ -435,17 +396,14 @@ public class GamePanel extends JPanel {
         GameCharacter hero = gameFacade.getHero();
         GameCharacter enemy = gameFacade.getEnemy();
 
-        // Панель героя
         if (hero != null) {
             drawStatPanel(g2d, 15, 20, "ГЕРОЙ", hero, true);
         }
 
-        // Панель противника
         if (enemy != null) {
             drawStatPanel(g2d, getWidth() - 215, 20, "ПРОТИВНИК", enemy, false);
         }
 
-        // Подсказки управления
         drawControls(g2d);
     }
 
@@ -454,7 +412,6 @@ public class GamePanel extends JPanel {
         int width = 200;
         int height = 120;
 
-        // Полупрозрачная панель с градиентом
         GradientPaint panelGradient = new GradientPaint(
                 x, y, new Color(30, 40, 60, 200),
                 x, y + height, new Color(40, 50, 70, 200)
@@ -462,12 +419,10 @@ public class GamePanel extends JPanel {
         g2d.setPaint(panelGradient);
         g2d.fillRoundRect(x, y, width, height, 15, 15);
 
-        // Граница
         g2d.setColor(new Color(100, 150, 200, 150));
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(x, y, width, height, 15, 15);
 
-        // Заголовок
         g2d.setFont(new Font("Arial", Font.BOLD, 16));
         if (isHero) {
             g2d.setColor(new Color(100, 200, 255));
@@ -476,7 +431,6 @@ public class GamePanel extends JPanel {
         }
         g2d.drawString(title, x + 10, y + 25);
 
-        // Статистика
         g2d.setFont(new Font("Arial", Font.PLAIN, 14));
         g2d.setColor(Color.WHITE);
 
@@ -486,7 +440,6 @@ public class GamePanel extends JPanel {
         g2d.drawString("🛡 Защита: " + character.getDefense(), x + 10, lineY);
         lineY += 22;
 
-        // Индикатор здоровья в процентах
         float healthPercent = (float) character.getHealth() / character.getMaxHealth() * 100;
         String healthStatus;
         if (healthPercent > 60) {
@@ -508,7 +461,6 @@ public class GamePanel extends JPanel {
         int width = 220;
         int height = 130;
 
-        // Панель подсказок
         g2d.setColor(new Color(20, 30, 45, 180));
         g2d.fillRoundRect(x, y, width, height, 15, 15);
 
@@ -516,12 +468,10 @@ public class GamePanel extends JPanel {
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawRoundRect(x, y, width, height, 15, 15);
 
-        // Заголовок
         g2d.setColor(new Color(150, 200, 255));
         g2d.setFont(new Font("Arial", Font.BOLD, 13));
         g2d.drawString("УПРАВЛЕНИЕ", x + 10, y + 20);
 
-        // Подсказки
         g2d.setFont(new Font("Arial", Font.PLAIN, 11));
         g2d.setColor(new Color(220, 220, 220));
 
@@ -540,7 +490,6 @@ public class GamePanel extends JPanel {
         }
     }
 
-    // Система частиц
     private static class Particle {
         double x, y;
         double vx, vy;
@@ -559,7 +508,7 @@ public class GamePanel extends JPanel {
         void update() {
             x += vx;
             y += vy;
-            vy += 0.2; // гравитация
+            vy += 0.2;
             life--;
         }
 
